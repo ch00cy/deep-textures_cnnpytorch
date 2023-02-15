@@ -22,7 +22,7 @@ def gramm(tnsr: torch.Tensor) -> torch.Tensor:
     return G
 
 
-def gram_loss(input: torch.Tensor, target: torch.Tensor, weight: float = 1.0):
+def gram_loss(input: torch.Tensor, target: torch.Tensor, weight: float = 1.0):  # init.py 에서 사용
     """Computes MSE Loss for 2 Gram matrices of the same type.
 
     Args:

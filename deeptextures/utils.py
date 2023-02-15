@@ -1,4 +1,4 @@
-"""Utilities.
+"""Utilities. : 추가기능
 """
 import random
 

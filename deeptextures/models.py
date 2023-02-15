@@ -3,7 +3,8 @@
 import torch
 import torch.nn as nn
 from torch.nn.functional import relu
-from torchvision.models.utils import load_state_dict_from_url
+#from torchvision.models.utils import load_state_dict_from_url
+from torch.hub import load_state_dict_from_url  #에러대체
 from torchvision.models.vgg import cfgs, make_layers, model_urls
 
 
@@ -63,7 +64,7 @@ class VGG19(nn.ModuleDict):
                 yield outputs[name]
 
 
-def vgg19(avg_pool: bool = True, pretrained: bool = True,):
+def vgg19(avg_pool: bool = True, pretrained: bool = True,): # init.py 에서 사용
     model = VGG19(avg_pool=avg_pool)
 
     if pretrained:
