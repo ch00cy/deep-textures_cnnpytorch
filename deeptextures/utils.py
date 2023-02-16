@@ -1,22 +1,27 @@
-"""Utilities. : 추가기능
+"""Utilities.   # 도우미 , 추가기능
 """
 import random
 
 import torch
 from torchvision.transforms.functional import resize, to_tensor, normalize, to_pil_image
+# resize : 입력 이미지를 주어진 크기로 조정 (이미지가 토치 텐서인 경우- […, H, W] 모양)
+# to_tensor : PIL img , numpy.ndarray 를 텐서로 변환
+# normalize : 평균 및 표준편차로 플로트 텐서 이미지를 정규화. 이 변환은 PIL 이미지를 지원하지 않음.
+# to_pil_image : 텐서 또는 ndarray를 PIL 이미지로 변환. 이 기능은 torchscript를 지원하지 않음.
 
-from PIL import Image
+from PIL import Image   # Python Imaging Library (pip install pillow)
+# Image 모듈 : 기본적인 이미지 입출력 담당
 
 
-MEAN = (0.485, 0.456, 0.406)
-STD = (0.229, 0.224, 0.225)
+MEAN = (0.485, 0.456, 0.406)    # 평균
+STD = (0.229, 0.224, 0.225) # 표준편차
 
 
 def set_seed(seed=None):
-    """Sets the random seed.
+    """Sets the random seed.    # seed 씨앗 : 랜덤값 줄 때 랜덤 기준값 , 상대가 seed값 알면 랜덤 깨짐
     """
-    random.seed(seed)
-    torch.manual_seed(seed)
+    random.seed(seed)   # 무작위 난수 발생 , seed=None : 현재의 시간이 시드가 됨
+    torch.manual_seed(seed) # 난수 생성을 위한 시드를 설정합니다. torch.Generator 객체를 반환합니다
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
 

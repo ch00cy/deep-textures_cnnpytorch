@@ -2,9 +2,13 @@
 """
 import torch
 import torch.nn as nn
-from torch.nn.functional import relu
+# torch.nn : 인스턴스화 시켜야함 -> attribute(클래스 내부에 포함되어있는 메소드,변수) 활용해 state 저장 가능
+# torch.nn.fuctional : 인스턴스화 시킬 필요 없이 바로 입력값 받을 수 있음
+from torch.nn.functional import relu    # relu 요소 관련
 #from torchvision.models.utils import load_state_dict_from_url
 from torch.hub import load_state_dict_from_url  #에러대체
+# Pytorch Hub-> 연구 재현성을 촉진하도록 설계된 사전 훈련된 모델 리포지토리
+# load_state_dict_from_url : 주어진 URL에서 Torch 직렬화된 개체를 로드 -> Dict[str, Any] 반환
 from torchvision.models.vgg import cfgs, make_layers, model_urls
 
 
@@ -70,5 +74,7 @@ def vgg19(avg_pool: bool = True, pretrained: bool = True,): # init.py 에서 사
     if pretrained:
         state_dict = load_state_dict_from_url(model_urls["vgg19"], progress=True)
         model.load_state_dict(state_dict)
+        # model.load_state_dict : 역직렬화된 state_dict를 사용, 모델의 매개변수들을 불러옴.
+        # state_dict는 간단히 말해 각 체층을 매개변수 Tensor로 매핑한 Python 사전(dict) 객체.
 
     return model
