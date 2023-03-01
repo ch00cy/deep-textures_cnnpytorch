@@ -35,15 +35,18 @@ def set_device(device=None):
 
 
 def prep_img(image: str, size=None, mean=MEAN, std=STD):
-    """Preprocess image.
+    """Preprocess image.    # 이미지 미리 준비하기
     1) load as PIl
     2) resize
     3) convert to tensor
     4) normalize
     """
     im = Image.open(image)
-    size = size or im.size[::-1]
-    texture = resize(im, size)
+    #size = size or im.size[::-1]
+    width = im.size[0]
+    height = im.size[1]
+    #texture = resize(im, size)
+    texture = resize(im, width*4, height*4)
     texture_tensor = to_tensor(texture).unsqueeze(0)
     texture_tensor = normalize(texture_tensor, mean=mean, std=std)
     return texture_tensor

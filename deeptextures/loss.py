@@ -44,23 +44,25 @@ def gram_loss(input: torch.Tensor, target: torch.Tensor, weight: float = 1.0):  
     """
     # tensor 모양 -> [B(batch size), C(channel size), H(img height), W(img width]
 
-    Bi, Bt = input.size(0), target.size(0)
-    assert Bi == Bt # assert 조건(true/false), 메세지(생략): 가정 설정문 , true 아닐 시 error
+    # input , target 2가지의 torch.Tensor 들어옴
+    # torch.Tensor.size() : (mini-batch size(데이터 한 묶음당 들어있는 데이터쌍(x-y) 개수), channel size, img size, img size)
+    Bi, Bt = input.size(0), target.size(0)  # 각각 input , target 의 미니 배치 사이즈
+    assert Bi == Bt # assert 조건(true/false), 메세지(생략): 가정 설정문 , true 아닐 시 error (둘이 같아야 ture)
 
-    Ni, Nt = input.size(1), target.size(1)
-    assert Ni == Nt
+    Ni, Nt = input.size(1), target.size(1)  # 각각 input, target 의 채널 사이즈
+    assert Ni == Nt # assert 조건(true/false), 메세지(생략): 가정 설정문 , true 아닐 시 error (둘이 같아야 ture)
 
-    Mi, Mt = input.size(-2) * input.size(-1), target.size(-2) * target.size(-1)
-    assert Mi == Mt
+    Mi, Mt = input.size(-2) * input.size(-1), target.size(-2) * target.size(-1) # 각각 img size의 width * height
+    assert Mi == Mt # assert 조건(true/false), 메세지(생략): 가정 설정문 , true 아닐 시 error (둘이 같아야 ture)
 
     B, N, M = Bi, Ni, Mi # input 에 대한 Batch size , Number of feturemap , Matrix-feturemap size(H * W)
 
     # tensor 모양 -> [B(batch size), C(channel size), H(img height), W(img width]
-    Gi, Gt = gramm(input), gramm(target)    # 위의 gramm 함수 -> gram 구함
+    Gi, Gt = gramm(input), gramm(target)    # 위의 gramm 함수 이용 -> gram 구함
 
-    # mse = 1/n sum(Y1 - Y2)^2
+    # mse = ( 1/n ) ( sum(Y1 - Y2)^2 )
     # El = (1 / (4 * N ** 2 * M ** 2)) * mse_loss(Gi, Gt, reduction="sum")
     # total Loss L = layer Sum(weight * E)
-    loss = weight * (1 / (4 * N ** 2 * M ** 2)) * mse_loss(Gi, Gt, reduction="sum") / B
+    loss = weight * (1 / (4 * N ** 2 * M ** 2)) *  (Gi, Gt, reduction="sum") / B
     # Batch도 사용돼서 한번 할 때 batch 만큼 나눠서 loss 가져가나봄..
     return loss
