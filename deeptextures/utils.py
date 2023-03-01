@@ -43,7 +43,9 @@ def prep_img(image: str, size=None, mean=MEAN, std=STD):
     """
     im = Image.open(image)
     size = size or im.size[::-1]
-    texture = resize(im, size*4)
+    width = size[0]
+    height = size[1]
+    texture = resize(im, width*4, height*4)
     texture_tensor = to_tensor(texture).unsqueeze(0)
     texture_tensor = normalize(texture_tensor, mean=mean, std=std)
     return texture_tensor
