@@ -34,7 +34,7 @@ def set_device(device=None):
     return torch.device("cuda:0" if torch.cuda.is_available() else "cpu") if device is None else torch.device(device)
 
 
-def prep_img(image: str, size=None, mean=MEAN, std=STD):
+def prep_img(image: str, im_width, im_height, mean=MEAN, std=STD):
     """Preprocess image.    # 이미지 미리 준비하기
     1) load as PIl
     2) resize
@@ -43,10 +43,8 @@ def prep_img(image: str, size=None, mean=MEAN, std=STD):
     """
     im = Image.open(image)
     #size = size or im.size[::-1]
-    width = im.size[0]
-    height = im.size[1]
     #texture = resize(im, size)
-    texture = resize(im, width*4, height*4)
+    texture = resize(im, im_width, im_height)
     texture_tensor = to_tensor(texture).unsqueeze(0)
     texture_tensor = normalize(texture_tensor, mean=mean, std=std)
     return texture_tensor
