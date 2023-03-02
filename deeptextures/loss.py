@@ -63,6 +63,6 @@ def gram_loss(input: torch.Tensor, target: torch.Tensor, weight: float = 1.0):  
     # mse = ( 1/n ) ( sum(Y1 - Y2)^2 )
     # El = (1 / (4 * N ** 2 * M ** 2)) * mse_loss(Gi, Gt, reduction="sum")
     # total Loss L = layer Sum(weight * E)
-    loss = weight * (1 / (4 * N ** 2 * M ** 2)) *  (Gi, Gt, reduction="sum") / B
+    loss = weight * (1 / (4 * N ** 2 * M ** 2)) *  mse_loss(Gi, Gt, reduction="sum") / B
     # Batch도 사용돼서 한번 할 때 batch 만큼 나눠서 loss 가져가나봄..
     return loss
