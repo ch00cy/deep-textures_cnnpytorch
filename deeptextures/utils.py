@@ -47,11 +47,14 @@ def prep_img(image: str, size=None, mean=MEAN, std=STD):    # 이미지 미리 �
     4) normalize    정규화(정상화):모든 데이터가 동일한 정도의 스케일(중요도)로 반영되도록 해주는 것
     """
     im = Image.open(image)  # open
+    # 변경!
     size = size or im.size[::-1]    # 이미지 사이즈에서 처음부터 끝까지 -1칸 간격으로 (역순으로)
                                     # (width,height) -> (height,width)
     size2 = (im.width*4, im.height*4)
-    #texture = resize(im, size)  # size 부분에 tuple 형태의 (w,h) - 튜플: () 로 둘러싸임
-    texture_tensor = to_tensor(im).unsqueeze(0)    # 이미지 -> 텐서형태로 -> unsqueeze(0): 0(첫번째 차원)에 1차원 더해줌
+    # 변경!
+    texture = resize(im, size)  # size 부분에 tuple 형태의 (w,h) - 튜플: () 로 둘러싸임
+    # 변경!
+    texture_tensor = to_tensor(texture).unsqueeze(0)    # 이미지 -> 텐서형태로 -> unsqueeze(0): 0(첫번째 차원)에 1차원 더해줌
                                                         # squeeze : 차원이 1인 경우에는 해당 차원을 제거
                                                         # unsqueeze : 특정 위치에 1인 차원을 추가할 수 있습니다.
     # 텐서(tensor): 배열(array)이나 행렬(matrix)과 매우 유사한 특수한 자료구조 / NumPy의 ndarray 와 유사
