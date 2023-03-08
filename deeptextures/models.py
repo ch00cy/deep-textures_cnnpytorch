@@ -46,11 +46,20 @@ class VGG19(nn.ModuleDict): # torch.nn.ModuleDict : Model dictionary - (string: 
         # cfgs 'E'의 레이어 이름들이 m이 nn.ReLU 값이 아닌것을 layers라는 변수에 넣는다.
         layers = filter(lambda m: not isinstance(m, nn.ReLU), make_layers(cfgs["E"]))
         # map(함수, (리스트, 튜플)등의 데이터) : 데이터들을 함수에 넣어 연결한다.
+        # 조건함수는 lambda 로 대체
+        # isinstance(확인하고자 하는 데이터 값, 확인하고자 하는 데이터 타입) -> true,false 반환
+        # 1) m = AvgPool2d(2, 2)
+        # 2) if (isinstance(m, nn.MaxPool2d) and self.avg_pool) -> m = AvgPool2d(2, 2)와 nn.MaxPool2d 데이터 타입이 같고 + init 에서 avg_pool=true일 때-> 아무일도 없음
+        # 3) else m -> 그렇지 않을 때 m = AvgPool2d(2, 2)와
+        # 4) 레이어 이름들 중 렐루 아닌것을 집어넣은 layers와 map 함
         layers = map(lambda m: nn.AvgPool2d(2, 2) if (isinstance(m, nn.MaxPool2d) and self.avg_pool) else m, layers)
+        # zip() : 길이가 같은 리스트 등의 요소를 묶어주는 함수
+        # dict() : 딕셔너리 = dict(zip([키1, 키2], [값1, 값2])) 형태로 받음 => 키값 : layer_names , 값 : layers 형태 딕셔너리
         self.update(dict(zip(self.layer_names, layers)))
 
         for p in self.parameters():
-            p.requires_grad_(False)
+            p.requires_grad_(False) # gradient 구하기 위해서는 tensor 의 속성을 requires_grad_=True로 설정
+            # flase 일 경우 -> gradient 를 업데이트 하지 않고, dropout, batchnormalization 등이 적용되지 않습니다.
 
     def remap_state_dict(self, state_dict):
         original_names = "0 2 4 5 7 9 10 12 14 16 18 19 21 23 25 27 28 30 32 34 36".split()
@@ -90,9 +99,9 @@ class VGG19(nn.ModuleDict): # torch.nn.ModuleDict : Model dictionary - (string: 
 
 
 def vgg19(avg_pool: bool = True, pretrained: bool = True,): # init.py 에서 사용
-    model = VGG19(avg_pool=avg_pool)
+    model = VGG19(avg_pool=avg_pool)    # VGG19 는 클래스 -> class VGG19(nn.ModuleDict)
 
-    if pretrained:
+    if pretrained:  # 매개변수로 pretrained 여부 받아왔음
         state_dict = load_state_dict_from_url(model_urls["vgg19"], progress=True)
         model.load_state_dict(state_dict)
         # model.load_state_dict : 역직렬화된 state_dict를 사용, 모델의 매개변수들을 불러옴.
