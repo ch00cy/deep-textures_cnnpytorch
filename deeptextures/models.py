@@ -98,6 +98,7 @@ class VGG19(nn.ModuleDict): # torch.nn.ModuleDict : Model dictionary - (string: 
                 yield outputs[name]
 
 
+
 def vgg19(avg_pool: bool = True, pretrained: bool = True,): # init.py 에서 사용
     model = VGG19(avg_pool=avg_pool)    # VGG19 는 클래스 -> class VGG19(nn.ModuleDict)
 

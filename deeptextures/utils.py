@@ -53,7 +53,7 @@ def prep_img(image: str, size=None, mean=MEAN, std=STD):    # 이미지 미리 �
     # 변경!
     texture = resize(im, size)  # size 부분에 tuple 형태의 (w,h) - 튜플: () 로 둘러싸임
     # 변경!
-    texture_tensor = to_tensor(texture).unsqueeze(0)    # 이미지 -> 텐서형태로 -> unsqueeze(0): 0(첫번째 차원)에 1차원 더해줌
+    texture_tensor = to_tensor(texture).unsqueeze(0)   # 이미지 -> 텐서형태로 -> unsqueeze(0): 0(첫번째 차원)에 1차원 더해줌
                                                         # squeeze : 차원이 1인 경우에는 해당 차원을 제거
                                                         # unsqueeze : 특정 위치에 1인 차원을 추가할 수 있습니다.
     # 텐서(tensor): 배열(array)이나 행렬(matrix)과 매우 유사한 특수한 자료구조 / NumPy의 ndarray 와 유사
@@ -66,6 +66,7 @@ def prep_img(image: str, size=None, mean=MEAN, std=STD):    # 이미지 미리 �
     # inplace (bool,optional) – Bool to make this operation inplace. (새로운 텐서 리턴?)
     # output: 정규화 된 텐서 이미지
     return texture_tensor
+
 
 
 def denormalize(tensor: torch.Tensor, mean=MEAN, std=STD, inplace: bool = False):
