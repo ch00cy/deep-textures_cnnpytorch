@@ -23,7 +23,7 @@ def gramm(tnsr: torch.Tensor) -> torch.Tensor:  # torch.Tensor : 단일 데이�
     # (0) : B (batch)
     # Feature map: B, C, H, W ->  B, N, M
     # Size([B(batch), N(number of filter = feature map number), M(feature map size = w * H)]
-    F = tnsr.view(tnsr.size(0), N, M)  # Size([B, N, M])/ reshape 와 같이 크기 변경(원소의 개수는 유지)
+    F = tnsr.view(tnsr.size(0), N, M)  # Size([B, N, M])    # reshape 와 같이 크기 변경(원소의 개수는 유지)
     # Gram matrix: B, N, M -> B, N, N
     # torch.bmm : Tensor(행렬)의 곱을 batch 단위로 처리 <->torch.mm: 단일 Tensor(행렬)로 계산
     # (b*n*m) * (b*m*p) = (b*n*p)
@@ -33,7 +33,7 @@ def gramm(tnsr: torch.Tensor) -> torch.Tensor:  # torch.Tensor : 단일 데이�
 
 
 def gram_loss(input: torch.Tensor, target: torch.Tensor, weight: float = 1.0):  # init.py 에서 사용
-    """Computes MSE Loss for 2 Gram matrices of the same type.  # 2개 Gram 에 대해 MSE(평균제곱오차) loss 계산
+    """Computes MSE Loss for 2 Gram matrices of the same type. # 2개 Gram 에 대해 MSE(평균제곱오차) loss 계산
 
     Args:
         input (torch.Tensor):
@@ -56,9 +56,15 @@ def gram_loss(input: torch.Tensor, target: torch.Tensor, weight: float = 1.0):  
     Mi, Mt = input.size(-2) * input.size(-1), target.size(-2) * target.size(-1) # 각각 img size의 width * height
     assert Mi == Mt # assert 조건(true/false), 메세지(생략): 가정 설정문 , true 아닐 시 error (둘이 같아야 ture)
 
-    B, N, M = Bi, Ni, Mi
+    B, N, M = Bi, Ni, Mi    # input 에 대한 Batch size , Number of feturemap , Matrix-feturemap size(H * W)
 
-    Gi, Gt = gramm(input), gramm(target)
+    # tensor 모양 -> [B(batch size), C(channel size), H(img height), W(img width]
 
+    Gi, Gt = gramm(input), gramm(target)    # 위의 gramm 함수 이용 -> gram 구함
+
+    # mse = ( 1/n ) ( sum(Y1 - Y2)^2 )
+    # El = (1 / (4 * N ** 2 * M ** 2)) * mse_loss(Gi, Gt, reduction="sum")
+    # total Loss L = layer Sum(weight * E)
     loss = weight * (1 / (4 * N ** 2 * M ** 2)) * mse_loss(Gi, Gt, reduction="sum") / B
+    # Batch도 사용돼서 한번 할 때 batch 만큼 나눠서 loss 가져가나봄..
     return loss
